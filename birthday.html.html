@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Happy Birthday Sister 🎉</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{
+  height:100vh;
+  overflow:hidden;
+  background: radial-gradient(circle at top, #0f2027, #0b0f14 60%);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  cursor:pointer;
+}
+canvas{position:fixed;top:0;left:0;z-index:0}
+.container{
+  position:relative;
+  z-index:2;
+  backdrop-filter:blur(20px);
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:40px;
+  border-radius:25px;
+  width:90%;
+  max-width:700px;
+  box-shadow:0 0 80px rgba(255,255,255,0.08);
+  transition:all 1s ease;
+}
+h1{font-size:2.5rem;margin-bottom:20px;letter-spacing:1px}
+p{font-size:1.1rem;line-height:1.8;opacity:0.9}
+.fade{opacity:0;transform:translateY(30px)}
+.show{opacity:1;transform:translateY(0);transition:1.2s ease}
+.glow{animation:glow 2s ease-in-out infinite alternate}
+@keyframes glow{
+  from{text-shadow:0 0 10px #fff}
+  to{text-shadow:0 0 25px #00eaff}
+}
+.footer{
+  position:fixed;
+  bottom:15px;
+  font-size:0.8rem;
+  opacity:0.5;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="container fade" id="card">
+  <h1 class="glow">Happy Birthday, My Sister 💖</h1>
+  <p id="message">
+    Click anywhere to begin a small journey made only for you...
+  </p>
+</div>
+
+<div class="footer">Made with ❤️ just for you</div>
+
+<script>
+// Messages sequence
+const messages = [
+`Today is not just a birthday...  
+It’s a celebration of the most amazing sister in the world.`,
+
+`You are my strength when I am weak,  
+my smile when I am sad,  
+and my light when everything feels dark.`,
+
+`Your kindness, your laughter, and your heart make this world more beautiful.`,
+
+`May this year bring you dreams that turn into reality,  
+and happiness that never fades.`,
+
+`You deserve the universe, and more. 🌌`,
+
+`Happy Birthday to the one who means everything to me. 💝`
+];
+
+let step = 0;
+const card = document.getElementById("card");
+const msg = document.getElementById("message");
+
+document.body.addEventListener("click", () => {
+  if(step < messages.length){
+    card.classList.remove("show");
+    setTimeout(()=>{
+      msg.innerText = messages[step];
+      card.classList.add("show");
+      step++;
+      launchConfetti();
+    },600);
+  }
+});
+
+setTimeout(()=>card.classList.add("show"),500);
+
+// Confetti
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let pieces = [];
+
+function launchConfetti(){
+  for(let i=0;i<100;i++){
+    pieces.push({
+      x: Math.random()*canvas.width,
+      y: -20,
+      size: Math.random()*8+2,
+      speed: Math.random()*3+2,
+      angle: Math.random()*360
+    });
+  }
+}
+
+function update(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pieces.forEach((p,i)=>{
+    p.y += p.speed;
+    p.angle += 0.1;
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.angle);
+    ctx.fillStyle=`hsl(${Math.random()*360},100%,60%)`;
+    ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);
+    ctx.restore();
+    if(p.y>canvas.height) pieces.splice(i,1);
+  });
+  requestAnimationFrame(update);
+}
+update();
+
+window.addEventListener("resize",()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
